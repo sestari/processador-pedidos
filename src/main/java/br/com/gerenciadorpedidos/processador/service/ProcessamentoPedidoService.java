@@ -82,7 +82,7 @@ public class ProcessamentoPedidoService {
     private Pedido criarPedido(final PedidoMensagem mensagem) {
         final Pedido pedido = Pedido.builder()
                 .idExterno(mensagem.getIdExterno())
-                .status(StatusPedido.PENDENTE)
+                .status(StatusPedido.PROCESSANDO)
                 .dataCriacao(mensagem.getDataRecebimento())
                 .build();
 
