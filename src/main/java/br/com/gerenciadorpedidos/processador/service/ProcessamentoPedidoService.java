@@ -27,11 +27,6 @@ public class ProcessamentoPedidoService {
 
     public void processar(final PedidoRecebidoEvent event) {
         final Pedido pedido = inserirPedidoSeNaoExistir(event);
-
-        if (pedido == null) {
-            throw new PedidoDuplicadoException(event.getIdExterno());
-        }
-
         processarPedido(pedido);
     }
 
