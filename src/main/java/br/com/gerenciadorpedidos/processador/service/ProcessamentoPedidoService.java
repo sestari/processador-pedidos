@@ -26,8 +26,12 @@ public class ProcessamentoPedidoService {
     private final PedidoEventPublisher eventPublisher;
 
     public void processar(final PedidoRecebidoEvent event) {
-        final Pedido pedido = inserirPedidoSeNaoExistir(event);
-        processarPedido(pedido);
+        try {
+            final Pedido pedido = inserirPedidoSeNaoExistir(event);
+            processarPedido(pedido);
+        } catch (PedidoDuplicadoException e) {
+            log.warn("Pedido duplicado ignorado: {}", event.getIdExterno());
+        }
     }
 
     @Transactional

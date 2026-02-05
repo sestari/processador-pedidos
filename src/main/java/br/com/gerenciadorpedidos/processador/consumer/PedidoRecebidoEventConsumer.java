@@ -1,7 +1,6 @@
 package br.com.gerenciadorpedidos.processador.consumer;
 
 import br.com.gerenciadorpedidos.processador.event.PedidoRecebidoEvent;
-import br.com.gerenciadorpedidos.processador.exception.PedidoDuplicadoException;
 import br.com.gerenciadorpedidos.processador.service.ProcessamentoPedidoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +20,6 @@ public class PedidoRecebidoEventConsumer {
 
         try {
             processamentoPedidoService.processar(event);
-        } catch (PedidoDuplicadoException e) {
-            log.warn("Pedido duplicado ignorado: {}", event.getIdExterno());
         } catch (Exception e) {
             log.error("Erro ao processar evento: idExterno={}", event.getIdExterno(), e);
             throw e;
