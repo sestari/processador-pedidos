@@ -1,4 +1,4 @@
-package br.com.gerenciadorpedidos.processador.dto;
+package br.com.gerenciadorpedidos.processador.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,17 +14,17 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PedidoMensagem implements Serializable {
+public class PedidoRecebidoEvent implements Serializable {
 
     private String idExterno;
     private LocalDateTime dataRecebimento;
-    private List<ItemMensagem> itens;
+    private List<ItemEvent> itens;
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ItemMensagem implements Serializable {
+    public static class ItemEvent implements Serializable {
         private String idProduto;
         private String nomeProduto;
         private Integer quantidade;

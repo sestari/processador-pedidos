@@ -1,6 +1,6 @@
 package br.com.gerenciadorpedidos.processador.consumer;
 
-import br.com.gerenciadorpedidos.processador.dto.PedidoMensagem;
+import br.com.gerenciadorpedidos.processador.event.PedidoRecebidoEvent;
 import br.com.gerenciadorpedidos.processador.exception.PedidoDuplicadoException;
 import br.com.gerenciadorpedidos.processador.service.ProcessamentoPedidoService;
 import lombok.RequiredArgsConstructor;
@@ -11,20 +11,20 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PedidoConsumer {
+public class PedidoRecebidoEventConsumer {
 
     private final ProcessamentoPedidoService processamentoPedidoService;
 
-    @RabbitListener(queues = "${rabbitmq.fila.pedidos}")
-    public void consumir(PedidoMensagem mensagem) {
-        log.info("Mensagem recebida da fila: {}", mensagem.getIdExterno());
+    @RabbitListener(queues = "${rabbitmq.queue.processamento}")
+    public void onPedidoRecebido(PedidoRecebidoEvent event) {
+        log.info("Evento recebido: idExterno={}, eventId={}", event.getIdExterno(), event.getIdExterno());
 
         try {
-            processamentoPedidoService.processar(mensagem);
+            processamentoPedidoService.processar(event);
         } catch (PedidoDuplicadoException e) {
-            log.warn("Pedido duplicado ignorado: {}", mensagem.getIdExterno());
+            log.warn("Pedido duplicado ignorado: {}", event.getIdExterno());
         } catch (Exception e) {
-            log.error("Erro ao processar pedido: {}", mensagem.getIdExterno(), e);
+            log.error("Erro ao processar evento: idExterno={}", event.getIdExterno(), e);
             throw e;
         }
     }

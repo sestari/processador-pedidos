@@ -33,8 +33,13 @@ spring:
     password: ${RABBITMQ_PASSWORD:guest}
 
 rabbitmq:
-  fila:
-    pedidos: fila.pedidos
+  exchange:
+    pedidos: pedidos.exchange
+  queue:
+    processamento: fila.processamento
+  routing-key:
+    pedido-recebido: pedido.recebido
+    pedido-processado: pedido.processado
 
 # Swagger
 springdoc:

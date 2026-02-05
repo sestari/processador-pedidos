@@ -1,6 +1,7 @@
 package br.com.gerenciadorpedidos.processador.entity;
 
 import br.com.gerenciadorpedidos.processador.enums.StatusPedido;
+import com.github.f4b6a3.uuid.UuidCreator;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -25,8 +27,8 @@ import java.util.List;
 public class Pedido {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(columnDefinition = "uuid")
+    private UUID id;
 
     @Column(nullable = false, unique = true)
     private String idExterno;
@@ -46,7 +48,7 @@ public class Pedido {
     @Column(length = 500)
     private String mensagemErro;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<ItemPedido> itens = new ArrayList<>();
 
@@ -58,5 +60,12 @@ public class Pedido {
     @PreUpdate
     public void preUpdate() {
         this.dataAtualizacao = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = UuidCreator.getTimeOrderedEpoch();
+        }
     }
 }
